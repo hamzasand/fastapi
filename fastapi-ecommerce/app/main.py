@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Path
+from typing import Dict
 from service.products import get_all_products
 
 
@@ -55,3 +56,21 @@ def list_products(
     total = len(products)
     products = products[offset : offset + limit]
     return {"total": total, "limit": limit, "items": products}
+
+
+@app.get("/products/{product_id}", response_model=Dict)
+def get_product_by_id(
+    product_id: str = Path(
+        ...,
+        min_length=36,
+        max_length=36,
+        description="UUID of the products",
+        example="c47ea2457-c4a9-4bfg-9dd5-6464r0ebe343",
+    )
+
+):
+    products = get_all_products()
+    for product in products:
+        if product["id"] == product_id:
+            return product
+    raise HTTPException(status_code=404, detail="Product not found!")
