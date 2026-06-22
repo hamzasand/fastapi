@@ -15,7 +15,7 @@ def get_user(user_id: int):
 
 # querry parameters + Default value
 @app.get("/items")
-def get_users(name: str=None, price: int=10):
+def get_users(name: str, price: int=10):
     return {
         "name":name,
         "price": price
