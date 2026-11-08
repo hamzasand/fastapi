@@ -38,5 +38,6 @@ def create_product(product: Product) -> dict[str, int]:
         "stock": product.stock,
     }
 
+
     
     return {"id": new_id}
