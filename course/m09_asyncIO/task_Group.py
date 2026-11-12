@@ -2,11 +2,13 @@
 import asyncio
 import time
 
+
 async def endpoint(route: str) -> str:
-    print(f">> handling route {route}")
+    print(f">> handling {route}")
     await asyncio.sleep(1)
     print(f"<< response {route}")
     return route
+
 
 async def server():
     tests = (
@@ -19,13 +21,16 @@ async def server():
 
     # "async with" because TaskGroup is an ASYNC context manager
     async with asyncio.TaskGroup() as tg:
-        task = [
-            tg.create_task(endpoint(route))
+        tasks = [
+            tg.create_task(endpoint(route))      # starts running immediately
             for route in tests
         ]
-        print("Task[0] result:", task[0].result())
+    # leaving the block = every task is finished
 
-        end = time.perf_counter()
-        print(f"Time taken: {end - start:.2f} seconds")
+    print("Task[0] result:", tasks[0].result())  # or: await tasks[0]
+
+    end = time.perf_counter()
+    print(f"Time taken: {end - start:.2f} seconds")     # ~1.00
+
 
 asyncio.run(server())
